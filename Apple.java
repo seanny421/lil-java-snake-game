@@ -5,15 +5,15 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.util.Random;
 
-public class Apple extends GameEntity{
+public class Apple {
 	Random rand = new Random();
 	GamePanel gp;
+	int x, y;
 
 	
 	public Apple(GamePanel gp) {
 		this.gp = gp;
 		setDefaultValues();
-		
 	}
 	
 	private void setDefaultValues(){

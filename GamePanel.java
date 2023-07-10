@@ -68,7 +68,7 @@ public class GamePanel extends JPanel implements ActionListener {
 		boolean updateApple;
 		// TODO Auto-generated method stub
 		if(running) {
-			player.update();
+			player.updateDirection();
 			updateApple = player.checkApple(apple.x, apple.y);
 			if(updateApple) {
 				score++;

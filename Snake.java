@@ -1,5 +1,4 @@
 
-			 //subclass inherits super
 
 import java.awt.Color;
 import java.awt.Graphics.*;
@@ -7,7 +6,7 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.util.ArrayList;
 
-public class Snake extends GameEntity {
+public class Snake {
 	GamePanel gp;
 	KeyHandler keyH;
 	int snakeLength;
@@ -36,27 +35,26 @@ public class Snake extends GameEntity {
 		if(x[0] == appleX && y[0] == appleY) {
 			snakeLength++;
 			return true;
-			
 		}
 		return false;
 	}
 	
 	public void checkCollisions() {
-		ArrayList<Integer> xCopy = new ArrayList<Integer>();
-		ArrayList<Integer> yCopy = new ArrayList<Integer>();
-		for(int i = 1; i < x.length; i++) {
-			xCopy.add(x[i]);
-			
-		}
-		for(int i = 1; i < y.length; i++) {
-			yCopy.add(y[i]);
-		}
-		
-		if(xCopy.contains(x[0]) && yCopy.contains(y[0])) {
-			System.out.println("OVERLAP");
+		//check for walls
+		if(x[0] > gp.SCREEN_WIDTH || x[0] < 0 || y[0] > gp.SCREEN_HEIGHT || y[0] < 0) {
 			gp.running = false;
 		}
-		
+
+		//check for eating itself - better way to do this? FIXME
+		for(int i = 1; i < x.length; i++) {
+			for(int j = 1; j < y.length; j++) {
+				if(x[0] == x[i] && y[0] == y[i] ) {
+					gp.running = false;
+					System.out.println("EATING ITSEFLF");
+					break;//no need to continue loop
+				}
+			}
+		}
 		
 	}
 	
@@ -87,10 +85,7 @@ public class Snake extends GameEntity {
 		
 	}
 	
-	public void update() {
-		//check for game info (screen borders + apple
-		//move the snake
-		
+	public void updateDirection() {
 		if(keyH.upPressed && direction != 'D') {
 			direction = 'U';
 		}
