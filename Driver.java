@@ -18,9 +18,6 @@ public class Driver {
 		window.setLocationRelativeTo(null);
 		window.setVisible(true);
 		
-		gamePanel.startGameThread();
-
-		
 	}
 
 }

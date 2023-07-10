@@ -2,6 +2,7 @@
 public class GameEntity {
 	
 	public int x, y;
-	public int speed;
+	static final int UNIT_SIZE = 25;
+
 
 }

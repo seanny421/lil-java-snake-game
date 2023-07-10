@@ -1,90 +1,83 @@
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.Timer;
 
 			//subclass inherits	super   using 	interface
-public class GamePanel extends JPanel implements Runnable {
-	//Screen settings
-	final int originalTileSize = 16;  //16x16 tile
-	final int scale = 2;
+public class GamePanel extends JPanel implements ActionListener {
 	
-	public final int tileSize = originalTileSize * scale; //32x32
-	final int maxScreenCol = 20;
-	final int maxScreenRow = 20;
-	final int screenWidth = tileSize * maxScreenCol;
-	final int screenHeight = tileSize * maxScreenRow;
 	
-	int FPS = 60;
+	boolean running = false;
+	//screen settings
+	static final int SCREEN_WIDTH = 600;
+	static final int SCREEN_HEIGHT = 600;
+	static final int UNIT_SIZE = 25;
+	static final int GAME_UNITS = (SCREEN_WIDTH * SCREEN_HEIGHT)/UNIT_SIZE;
+	static final int DELAY = 75;
+	final int x[] = new int[GAME_UNITS];
+	final int y[] = new int[GAME_UNITS];
+	//game settings
+	int score = 0;
 
 	KeyHandler keyH = new KeyHandler();
 	Thread gameThread;
 	Snake player = new Snake(this, keyH);
 	Apple apple = new Apple(this);
+	Timer timer;
 	
 	public GamePanel() {
-		this.setPreferredSize(new Dimension(screenWidth, screenHeight));
+		this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
 		this.setBackground(Color.BLACK);
 		this.setDoubleBuffered(true);
 		this.addKeyListener(keyH);
 		this.setFocusable(true);
+		startGame();
 	}
 	
-	public void startGameThread() {
-		gameThread = new Thread(this);
-		gameThread.start(); //auto calls run method
 	
-	}
-	
-	@Override
-	public void run() {
-		//game loop in here
-		while(gameThread != null) {
-			//create gameClock, only do process 60 times per second
-			double drawInterval = 1000000000 / FPS;
-			double nextDrawTime = System.nanoTime() + drawInterval;
-			
-			//UPDATE info such as character positions
-			update();
-
-			//DRAW the screen with updated info
-			repaint();//calls paintComponent - I know it's weird
-			
-			
-			//stop the system updating for the remaining times this loop would execute 
-			try {
-				double remainingTime = nextDrawTime - System.nanoTime();
-				remainingTime = remainingTime/1000000;
-
-				if(remainingTime < 0) {
-					remainingTime = 0;
-				}
-
-				Thread.sleep((long) remainingTime);
-				
-				nextDrawTime += drawInterval;
-				
-				
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-		}
-		
-	}
-	
-	public void update(){
-		player.update();
+	public void startGame() {
+		running = true;
+		timer = new Timer(DELAY, this);
+		timer.start();
 	}
 	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);//call super (JPanel.paintComponent)
+//		draw(g); //draw grid
 		player.draw(g);
 		apple.draw(g);
 		g.dispose();
-		
+	}
+	
+	public void draw(Graphics g) {
+		for(int i = 0; i < SCREEN_HEIGHT/UNIT_SIZE; i++) {
+			g.setColor(Color.WHITE);
+			g.drawLine(i*UNIT_SIZE, 0, i*UNIT_SIZE, SCREEN_HEIGHT);
+			g.drawLine(0, i*UNIT_SIZE, SCREEN_HEIGHT, i*UNIT_SIZE);
+		}
+	}
+
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		boolean updateApple;
+		// TODO Auto-generated method stub
+		if(running) {
+			player.update();
+			updateApple = player.checkApple(apple.x, apple.y);
+			if(updateApple) {
+				score++;
+				apple = new Apple(this);
+			}
+			player.move();
+			player.checkCollisions();
+		}
+		repaint();
 		
 	}
 	

@@ -17,9 +17,8 @@ public class Apple extends GameEntity{
 	}
 	
 	private void setDefaultValues(){
-		x = rand.nextInt(0, gp.screenWidth);
-		y = rand.nextInt(0, gp.screenWidth);
-		speed = 0; //doesn't move with player
+		x = rand.nextInt(0, (int) gp.SCREEN_WIDTH/gp.UNIT_SIZE)*gp.UNIT_SIZE;
+		y = rand.nextInt(0, (int) gp.SCREEN_HEIGHT/gp.UNIT_SIZE)*gp.UNIT_SIZE;
 	}
 	
 	public void update() {
@@ -28,7 +27,7 @@ public class Apple extends GameEntity{
 	
 	public void draw(Graphics g) {
 		g.setColor(Color.RED);
-		g.fillRect(x, y, gp.tileSize, gp.tileSize);
+		g.fillRect(x, y, gp.UNIT_SIZE, gp.UNIT_SIZE);
 	}
 
 }
