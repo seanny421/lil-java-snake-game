@@ -2,9 +2,10 @@
 
 import java.awt.Color;
 import java.awt.Graphics.*;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
-import java.util.ArrayList;
 
 public class Snake {
 	GamePanel gp;
@@ -13,13 +14,11 @@ public class Snake {
 	char direction = 'R'; //direction snake is moving
 	
 	
-	final int x[];
-	final int y[];
+	int x[];
+	int y[];
 	
 	
 	public Snake(GamePanel gp, KeyHandler keyH) {
-		x = new int[gp.GAME_UNITS];
-		y = new int[gp.GAME_UNITS];
 		this.gp = gp;
 		this.keyH = keyH;
 		
@@ -27,6 +26,9 @@ public class Snake {
 	}
 	
 	public void setDefaultValues() {
+		x = new int[gp.GAME_UNITS];
+		y = new int[gp.GAME_UNITS];
+		System.out.println(x[0]);
 		snakeLength = 1;
 	}
 	
@@ -39,35 +41,36 @@ public class Snake {
 		return false;
 	}
 	
+	public boolean checkContainment(int target, int arr[]) {
+		for(int i = 0; i < arr.length; i++) {
+			if(target == x[i])
+				return true;
+		}
+		return false;
+	}
+	
 	public void checkCollisions() {
 		//check for walls
 		if(x[0] > gp.SCREEN_WIDTH || x[0] < 0 || y[0] > gp.SCREEN_HEIGHT || y[0] < 0) {
-			gp.running = false;
+			gp.endGame();
 		}
-
-		//check for eating itself - better way to do this? FIXME
+		//check for eating ourself
 		for(int i = 1; i < x.length; i++) {
-			for(int j = 1; j < y.length; j++) {
-				if(x[0] == x[i] && y[0] == y[i] ) {
-					gp.running = false;
-					System.out.println("EATING ITSEFLF");
-					break;//no need to continue loop
-				}
+			if(x[0] == x[i] && y[0] == y[i]) {
+				gp.endGame();
+				break;
 			}
 		}
 		
 	}
 	
-	public void gameOver(Graphics g) {
-		
-	}
-	
 	public void move() {
+		//allow for snake body to follow head
 		for(int i = snakeLength; i > 0; i--) {
 			x[i] = x[i-1];
 			y[i] = y[i-1];
 		}
-		
+		//move based on direction
 		switch(direction) {
 		case 'R':
 			x[0] += gp.UNIT_SIZE;
@@ -85,6 +88,7 @@ public class Snake {
 		
 	}
 	
+	//listen for player input
 	public void updateDirection() {
 		if(keyH.upPressed && direction != 'D') {
 			direction = 'U';
