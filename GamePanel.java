@@ -26,7 +26,7 @@ public class GamePanel extends JPanel implements ActionListener {
 
 	KeyHandler keyH = new KeyHandler();
 	Thread gameThread;
-	Snake player = new Snake(this, keyH);
+	Snake player;
 	Apple apple = new Apple(this);
 	Timer timer;
 	
@@ -36,15 +36,31 @@ public class GamePanel extends JPanel implements ActionListener {
 		this.setDoubleBuffered(true);
 		this.addKeyListener(keyH);
 		this.setFocusable(true);
-		startGame();
+		timer = new Timer(DELAY, this);
+		timer.start();
+		this.player = new Snake(this, keyH);
 	}
 	
 	
 	public void startGame() {
+		System.out.println("STARTING");
 		running = true;
-		timer = new Timer(DELAY, this);
-		timer.start();
+		timer.restart();
 	}
+	
+	public void pauseGame() {
+		running = false;
+//		timer.stop();
+	}
+	
+	public void endGame() {
+		running = false;
+		player = new Snake(this, keyH);
+//		timer.stop();
+		System.out.println("endGame");
+		score = 0;
+	}
+
 	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);//call super (JPanel.paintComponent)
@@ -61,22 +77,36 @@ public class GamePanel extends JPanel implements ActionListener {
 			g.drawLine(0, i*UNIT_SIZE, SCREEN_HEIGHT, i*UNIT_SIZE);
 		}
 	}
-
+	
+	public void checkPause() {
+		if(keyH.escapePressed) {
+			pauseGame();
+			
+		}
+	}
+	
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		boolean updateApple;
 		// TODO Auto-generated method stub
 		if(running) {
+			player.move();
 			player.updateDirection();
 			updateApple = player.checkApple(apple.x, apple.y);
 			if(updateApple) {
 				score++;
 				apple = new Apple(this);
 			}
-			player.move();
 			player.checkCollisions();
+			checkPause();
 		}
+		else if(!running && keyH.spacePressed) {
+			startGame();
+		}
+	
+			
+			
 		repaint();
 		
 	}
