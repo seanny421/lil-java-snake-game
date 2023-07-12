@@ -5,12 +5,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
 import javax.swing.Timer;
 
 			//subclass inherits	super   using 	interface
 public class GamePanel extends JPanel implements ActionListener {
-	
 	
 	boolean running = false;
 	//screen settings
@@ -38,7 +36,8 @@ public class GamePanel extends JPanel implements ActionListener {
 		this.setFocusable(true);
 		timer = new Timer(DELAY, this);
 		timer.start();
-		this.player = new Snake(this, keyH);
+		this.player = new AIPlayer(this, keyH);
+//		this.player = new Snake(this, keyH);
 	}
 	
 	
@@ -50,13 +49,12 @@ public class GamePanel extends JPanel implements ActionListener {
 	
 	public void pauseGame() {
 		running = false;
-//		timer.stop();
 	}
 	
 	public void endGame() {
 		running = false;
-		player = new Snake(this, keyH);
-//		timer.stop();
+//		player = new Snake(this, keyH);
+		player = new AIPlayer(this, keyH);
 		System.out.println("endGame");
 		score = 0;
 	}
@@ -70,6 +68,7 @@ public class GamePanel extends JPanel implements ActionListener {
 		g.dispose();
 	}
 	
+	//helper function to visualise grid
 	public void draw(Graphics g) {
 		for(int i = 0; i < SCREEN_HEIGHT/UNIT_SIZE; i++) {
 			g.setColor(Color.WHITE);
@@ -79,10 +78,7 @@ public class GamePanel extends JPanel implements ActionListener {
 	}
 	
 	public void checkPause() {
-		if(keyH.escapePressed) {
-			pauseGame();
-			
-		}
+		if(keyH.escapePressed) {pauseGame();}
 	}
 	
 
@@ -91,8 +87,8 @@ public class GamePanel extends JPanel implements ActionListener {
 		boolean updateApple;
 		// TODO Auto-generated method stub
 		if(running) {
-			player.move();
 			player.updateDirection();
+			player.move();
 			updateApple = player.checkApple(apple.x, apple.y);
 			if(updateApple) {
 				score++;
@@ -101,12 +97,8 @@ public class GamePanel extends JPanel implements ActionListener {
 			player.checkCollisions();
 			checkPause();
 		}
-		else if(!running && keyH.spacePressed) {
-			startGame();
-		}
-	
-			
-			
+		else if(!running && keyH.spacePressed) {startGame();}
+
 		repaint();
 		
 	}

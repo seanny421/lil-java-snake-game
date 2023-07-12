@@ -1,9 +1,6 @@
 
 
 import java.awt.Color;
-import java.awt.Graphics.*;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 
@@ -13,10 +10,8 @@ public class Snake {
 	int snakeLength;
 	char direction = 'R'; //direction snake is moving
 	
-	
 	int x[];
 	int y[];
-	
 	
 	public Snake(GamePanel gp, KeyHandler keyH) {
 		this.gp = gp;
@@ -41,27 +36,22 @@ public class Snake {
 		return false;
 	}
 	
-	public boolean checkContainment(int target, int arr[]) {
-		for(int i = 0; i < arr.length; i++) {
-			if(target == x[i])
-				return true;
-		}
-		return false;
-	}
-	
 	public void checkCollisions() {
-		//check for walls
-		if(x[0] > gp.SCREEN_WIDTH || x[0] < 0 || y[0] > gp.SCREEN_HEIGHT || y[0] < 0) {
+		//check for walls 
+		if(x[0] > gp.SCREEN_WIDTH-1 || x[0] < 0 || y[0] > gp.SCREEN_HEIGHT-1 || y[0] < 0) {
+			System.out.println("SCREEN EDGE");
 			gp.endGame();
 		}
 		//check for eating ourself
 		for(int i = 1; i < x.length; i++) {
+//			System.out.println(x[i] + ", " + y[i]);
 			if(x[0] == x[i] && y[0] == y[i]) {
+				System.out.println("EATING OURSELVES");
 				gp.endGame();
 				break;
 			}
+//			System.out.println();
 		}
-		
 	}
 	
 	public void move() {
