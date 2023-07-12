@@ -38,19 +38,17 @@ public class Snake {
 	
 	public void checkCollisions() {
 		//check for walls 
-		if(x[0] > gp.SCREEN_WIDTH-1 || x[0] < 0 || y[0] > gp.SCREEN_HEIGHT-1 || y[0] < 0) {
+		if(x[0] > gp.SCREEN_WIDTH - gp.UNIT_SIZE || x[0] < 0 || y[0] > gp.SCREEN_HEIGHT - gp.UNIT_SIZE || y[0] < 0) {
 			System.out.println("SCREEN EDGE");
 			gp.endGame();
 		}
 		//check for eating ourself
 		for(int i = 1; i < x.length; i++) {
-//			System.out.println(x[i] + ", " + y[i]);
 			if(x[0] == x[i] && y[0] == y[i]) {
 				System.out.println("EATING OURSELVES");
 				gp.endGame();
 				break;
 			}
-//			System.out.println();
 		}
 	}
 	

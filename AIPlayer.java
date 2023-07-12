@@ -11,7 +11,7 @@ public class AIPlayer extends Snake{
 		super(gp, keyH);
 		// TODO Auto-generated constructor stub
 	}
-
+	
 	public void bestFirstSearch() {
 		ArrayList<int[]> m = findNextPossibleMove(); 
 		ArrayList<Integer> heuristics = new ArrayList<>();
@@ -21,6 +21,7 @@ public class AIPlayer extends Snake{
 		}
 
 		Node bestMove = moves.peek();
+
 		if(bestMove != null && x[0] > bestMove.x) {
 			direction = 'L';
 		}
@@ -48,10 +49,10 @@ public class AIPlayer extends Snake{
 		int negNextY = y[0] - gp.UNIT_SIZE;
 		
 		
-		if(posNextX <= gp.SCREEN_WIDTH-1 && direction != 'L') {
+		if(posNextX <= gp.SCREEN_WIDTH-gp.UNIT_SIZE && direction != 'L') {
 			boolean shouldAdd = true;
 			for(int i = 1; i < snakeLength; i++) {
-				if(x[i] == posNextX) {
+				if(x[i] == posNextX && y[0] == y[i]) {
 					shouldAdd = false;
 				}
 			}
@@ -59,10 +60,10 @@ public class AIPlayer extends Snake{
 			if(shouldAdd) {moves.add(new int[] {posNextX, y[0]});}
 		}
 
-		if(posNextY <= gp.SCREEN_HEIGHT-1 && direction != 'U') {
+		if(posNextY <= gp.SCREEN_HEIGHT-gp.UNIT_SIZE && direction != 'U') {
 			boolean shouldAdd = true;
 			for(int i = 1; i < snakeLength; i++) {
-				if(y[i] == posNextY) {
+				if(y[i] == posNextY && x[i] == x[0]) {
 					shouldAdd = false;
 				}
 			}
@@ -72,7 +73,7 @@ public class AIPlayer extends Snake{
 		if(negNextX >= 0 && direction != 'R') {
 			boolean shouldAdd = true;
 			for(int i = 1; i < snakeLength; i++) {
-				if(x[i] == negNextX) {
+				if(x[i] == negNextX && y[i] == y[0]) {
 					shouldAdd = false;
 				}
 			}
@@ -82,7 +83,7 @@ public class AIPlayer extends Snake{
 		if(negNextY >= 0 && direction != 'D') {
 			boolean shouldAdd = true;
 			for(int i = 1; i < snakeLength; i++) {
-				if(y[i] == negNextY) {
+				if(y[i] == negNextY && x[0] == x[i]) {
 					shouldAdd = false;
 				}
 			}
