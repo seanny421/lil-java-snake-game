@@ -1,4 +1,4 @@
 # lil-java-snake-game - AI Plays Snake!
 
-##Game Modes
+# Game Modes
  - Player Controlled
